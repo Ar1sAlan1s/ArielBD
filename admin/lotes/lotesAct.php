@@ -15,9 +15,9 @@ require_once '../../includes/db.php';
 
     <div class="container text-center">
             <h2 class="mb-4">Modificar Lote</h2>
-            <form method="GET" action="lotes.php">
-                <button type="submit" class="btn btn-danger btn-lg">Volver</button>
-            </form>
+            
+            <a href="lotes.php" class="btn btn-danger btn-lg w-100 mt-2">Volver</a>
+            
     </div>
 
 </body>
