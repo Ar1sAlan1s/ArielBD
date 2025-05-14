@@ -16,47 +16,52 @@
         $fechaEntrada = $_POST['fechaEntrada'];
         $fechaCaducidad = $_POST['fechaCaducidad'];
     }
-
-    if(empty($idLote)){
-        $errores[] = 'El ID de lote es obligatorio';
-    }
-    #Verificar que no este vacio el id y verificar que exista en la BD
    
-    if (empty($productoID)) {
-        $errores[] = 'El ID de producto es obligatorio.';
-    } else {
-        $stmt = $conn->prepare("SELECT 1 FROM Producto WHERE ID_Producto = ?");
-        $stmt->bind_param("i", $productoID);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows === 0) {
-            $errores[] = "El producto con ID $productoID no existe.";
+    #Despliega los ids dependiendo el tipo
+    if (!empty($tipo)) {
+        if ($tipo === 'Materia Prima') {
+            $tabla = 'MateriaPrima';
+            $Id = 'ID_MateriaPrima';
+        } elseif ($tipo === 'Producto') {
+            $tabla = 'Producto';
+            $Id = 'ID_Producto';
+        } else {
+            $tabla = null;
         }
-        $stmt->close();
+
+        if ($tabla) {
+            $query = "SELECT ID_Producto, Nombre FROM $tabla";
+            $result = $conn->query($query);
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    $productosDisponibles[] = $row;
+                }
+            }
+        }
     }
+
     #Verificar que las fechas sean mas adelante de la que se hace el registro
     $hoy = date('Y-m-d');
     if (empty($fechaEntrada) || empty($fechaCaducidad)) {
-        $errors[] = 'Ambas fechas son obligatorias.';
+        $errores[] = 'Ambas fechas son obligatorias.';
     } elseif ($fechaEntrada < $hoy) {
-        $errors[] = 'La fecha de entrada debe ser igual o posterior a la fecha de hoy.';
+        $errores[] = 'La fecha de entrada debe ser igual o posterior a la fecha de hoy.';
     } elseif ($fechaCaducidad <= $fechaEntrada) {
-        $errors[] = 'La fecha de caducidad debe ser posterior a la fecha de entrada.';
+        $errores[] = 'La fecha de caducidad debe ser posterior a la fecha de entrada.';
     }
     #Se registra el lote
     if (empty($errores)) {
         $insertStmt = $conn->prepare(
-            "INSERT INTO Lote (ID_Lote, Tipo, Fecha_Entrada, Fecha_Caducidad, ID_Producto) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO Lote (ID_Producto,Tipo, Fecha_Entrada, Fecha_Caducidad) VALUES (?, ?, ?, ?)"
         );
-        $idLote = trim($_POST['loteID']);
         $tipo   = trim($_POST['tipo']);
         $insertStmt->bind_param(
-            "isssi",
-            $idLote,
+            "isss",
+            $productoID,
             $tipo,
             $fechaEntrada,
-            $fechaCaducidad,
-            $productoID
+            $fechaCaducidad
+            
         );
         if ($insertStmt->execute()) {
             header('Location: lotes.php?status=success');
@@ -67,6 +72,7 @@
         $insertStmt->close();
     }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +80,7 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MResgistrar Lote</title>
+        <title>Resgistrar Lote</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="bg-light d-flex justify-content-center align-items-center vh-100">
@@ -89,14 +95,26 @@
                 </ul>
             </div>
         <?php endif; ?>
-        <form method="POST" action="">
-            <div class="mb-3 text-start">
-                <label for="loteID" class="form-label">ID Lote</label>
-                <input type="number" class="form-control" id="loteID" name="loteID" placeholder="ID Lote" required value="<?= htmlspecialchars($idLote) ?>">
-            </div>
+       <form method="POST" action="">
             <div class="mb-3 text-start">
                 <label for="tipo" class="form-label">Tipo</label>
-                <input type="text" class="form-control" id="tipo" name="tipo" placeholder="Tipo" required value="<?= htmlspecialchars($tipo) ?>">
+                <select class="form-select" id="tipo" name="tipo" required onchange="this.form.submit()">
+                    <option value="" disabled <?= $tipo === '' ? 'selected' : '' ?>>Selecciona una opción</option>
+                    <option value="Materia Prima" <?= $tipo === 'Materia Prima' ? 'selected' : '' ?>>Materia Prima</option>
+                    <option value="Producto" <?= $tipo === 'Producto' ? 'selected' : '' ?>>Producto</option>
+                </select>
+            </div>
+
+           <div class="mb-3 text-start">
+                <label for="productoID" class="form-label">ID Producto</label>
+                <select class="form-select" id="productoID" name="productoId" required>
+                    <option value="">Selecciona un id</option>
+                    <?php foreach ($productosDisponibles as $producto): ?>
+                    <option value="<?= $producto['ID_Producto'] ?>" <?= $productoID == $producto['ID_Producto'] ? 'selected' : '' ?>>
+                    <?= $producto['ID_Producto'] ?> - <?= htmlspecialchars($producto['Nombre']) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="mb-3 text-start">
                 <label for="fechaEntrada" class="form-label">Fecha de Entrada</label>
@@ -106,10 +124,7 @@
                 <label for="fechaCaducidad" class="form-label">Fecha de Caducidad</label>
                 <input type="date" class="form-control" id="fechaCaducidad" name="fechaCaducidad" required value="<?= htmlspecialchars($fechaCaducidad) ?>">
             </div>
-            <div class="mb-3 text-start">
-                <label for="productoID" class="form-label">ID Producto</label>
-                <input type="number" class="form-control" id="productoID" name="ProductoId" placeholder="ID Producto" required value="<?= htmlspecialchars($productoID) ?>">
-            </div>
+            
             <button type="submit" class="btn btn-success btn-lg w-100">Registrar</button>
             <a href="lotes.php" class="btn btn-danger btn-lg w-100 mt-2">Volver</a>
         </form>
