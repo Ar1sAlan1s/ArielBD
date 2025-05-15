@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['nombre'] = $usuarioData['Nombre'];
         $_SESSION['rol'] = $usuarioData['Rol'];
 
-        if ($usuarioData['Rol'] == 'admin'){
+        if ($usuarioData['Rol'] == 'Administrador'){
             header("Location: admin.php");
         } else{
             header("Location: cajero.php");
