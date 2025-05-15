@@ -1,20 +1,19 @@
 <?php
     require_once '../../includes/db.php';
     #Variables xddd
-    $idLote = '';
-    $productoID='';
-    $tipo='';
+    $productoID = '';
+    $tipo = '';
     $fechaEntrada = '';
     $fechaCaducidad = '';
     $errores = [];
+    $productosDisponibles = [];
 
     #Definir variables con lo del formulario
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $idLote = $_POST['loteID'];
-        $productoID = $_POST['productoID'];
-        $tipo = $_POST['tipo'];
-        $fechaEntrada = $_POST['fechaEntrada'];
-        $fechaCaducidad = $_POST['fechaCaducidad'];
+        $productoID = $_POST['productoID'] ?? '';
+        $tipo = $_POST['tipo'] ?? '';
+        $fechaEntrada = $_POST['fechaEntrada'] ?? '';
+        $fechaCaducidad = $_POST['fechaCaducidad'] ?? '';
     }
    
     #Despliega los ids dependiendo el tipo
@@ -30,7 +29,7 @@
         }
 
         if ($tabla) {
-            $query = "SELECT ID_Producto, Nombre FROM $tabla";
+            $query = "SELECT $Id, Nombre FROM $tabla";
             $result = $conn->query($query);
             if ($result) {
                 while ($row = $result->fetch_assoc()) {
@@ -49,20 +48,31 @@
     } elseif ($fechaCaducidad <= $fechaEntrada) {
         $errores[] = 'La fecha de caducidad debe ser posterior a la fecha de entrada.';
     }
+
     #Se registra el lote
     if (empty($errores)) {
+        #Definir valores NULL para el que no se use
+        $idProducto = null;
+        $idMateria = null;
+
+        if ($tipo === 'Producto') {
+            $idProducto = $productoID;
+        } elseif ($tipo === 'Materia Prima') {
+            $idMateria = $productoID;
+        }
+
         $insertStmt = $conn->prepare(
-            "INSERT INTO Lote (ID_Producto,Tipo, Fecha_Entrada, Fecha_Caducidad) VALUES (?, ?, ?, ?)"
+            "INSERT INTO Lote (Tipo, FechaEntrada, FechaCaducidad, ID_Producto, ID_MateriaPrima) VALUES (?, ?, ?, ?, ?)"
         );
-        $tipo   = trim($_POST['tipo']);
         $insertStmt->bind_param(
-            "isss",
-            $productoID,
+            "sssii",
             $tipo,
             $fechaEntrada,
-            $fechaCaducidad
-            
+            $fechaCaducidad,
+            $idProducto,
+            $idMateria
         );
+
         if ($insertStmt->execute()) {
             header('Location: lotes.php?status=success');
             exit;
@@ -71,9 +81,8 @@
         }
         $insertStmt->close();
     }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -107,7 +116,7 @@
 
            <div class="mb-3 text-start">
                 <label for="productoID" class="form-label">ID Producto</label>
-                <select class="form-select" id="productoID" name="productoId" required>
+                <select class="form-select" id="productoID" name="productoID" required>
                     <option value="">Selecciona un id</option>
                     <?php foreach ($productosDisponibles as $producto): ?>
                     <option value="<?= $producto['ID_Producto'] ?>" <?= $productoID == $producto['ID_Producto'] ? 'selected' : '' ?>>
