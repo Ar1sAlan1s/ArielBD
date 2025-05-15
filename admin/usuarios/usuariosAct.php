@@ -2,49 +2,43 @@
     session_start();
     require_once '../../includes/db.php';
 
-    if (!isset($_SESSION['usuario'])){
+if (!isset($_SESSION['usuario'])){
         header('Location: ../../logins/login.php');
         exit;
     }
 
-    $rol = $_SESSION['rol'];
+    $rol = $_SESSION['rol'];+
 
-    if ($rol!='Administrador'){
+    if ($rol!= 'Administrador'){
         header('Location: ../../operador/cajero.php')
         exit;
     }
+
 
     $errores = [];
     $usuario = null;
 
     if (isset($_GET['id'])){
         $id = $_GET['id'];
-        $stmt = $conn->prepare("SELECT * FROM Usuario WHERE ID_Usuario == ?");
+        $stmt = $conn->prepare("SELECT * FROM Usuario WHERE ID_Usuario = ?");
 
-        $stmt = bind_param("i", $id);
+        $stmt->bind_param("i", $id);
         $stmt->execute();
 
         $result = $stmt->get_result();
-        $producto = $result->fetch-assoc();
+        $usuario = $result->fetch_assoc();
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $id = $_POST['id'];
-        if ($_POST['nombre'] != ""){
-            $nombre = trim($_POST['nombre']);
-        } 
-        if ($_POST['rol'] != ""){
-            $rol = trim($_POST['rol']);
-        } 
-        if ($_POST['contrasena'] != ""){
-            $contrasena = trim($_POST['contrasena']);
-        } 
-       
+        $nombre = !empty($_POST['nombre']) ? trim($_POST['nombre']) : $usuario['Nombre'];
+        $rol = !empty($_POST['rol']) ? trim($_POST['rol']) : $usuario['Rol'];
+        $contrasena = !empty($_POST['contrasena']) ? trim($_POST['contrasena']) : $usuario['Contrasena'];       
 
         //Validaciones
-        if (!isset($nombre) && !isset($rol) && !isset($contrasena)){
+        if ($_POST['nombre']=="" && $_POST['rol'] == "" && $_POST['contrasena']==""){
             $errores[] = "No se puede editar con campos vacios. "; 
-        }
+        }   
 
         if(empty($errores)){
             if(!isset($nombre)){
@@ -56,10 +50,10 @@
             }
 
             $stmt = $conn->prepare("UPDATE Usuario SET Nombre = ?, Rol = ?, Contrasena = ? WHERE ID_Usuario = ?");
-            $stmt = bind_param("sss", $nombre, $rol, $contrasena, $id);
+            $stmt->bind_param("sssi", $nombre, $rol, $contrasena, $id);
 
             if ($stmt->execute()) {
-                header ('Location: usuarios.php?success?=1');
+                header('Location: usuarios.php?success=1');
                 exit;
             } else {
                 $errores[] = "Error al actualizar: " . $conn->error;
@@ -94,10 +88,34 @@
         <?php endif; ?>
         
         <form action="" method = "POST">
+            <input type="hidden" name="id" value="<?= $usuario['ID_Usuario'] ?? '' ?>">
+
+            <div class="mb-3 text-start">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" 
+                    value="<?= htmlspecialchars($usuario['Nombre'] ?? '') ?>"
+                    placeholder="Dejar vacío para mantener el nombre actual">
+            </div>
             
+            <div class="mb-3 text-start">
+                <label for="rol" class="form-label">Rol</label>
+                <select name="rol" id="rol" class="form-select">
+                    <option value="">Mantener rol actual</option>
+                    <option value="Administrador" <?= ($usuario['Rol'] ?? '') == 'Administrador' ? 'selected' : '' ?>>Administrador</option>
+                    <option value="Operador" <?= ($usuario['Rol'] ?? '') == 'Operador' ? 'selected' : '' ?>>Operador</option>
+                </select>
+            </div>
+
+            <div class="mb-3 text-start">
+                <label for="contrasena" class="form-label">Nueva Contraseña (dejar vacío para mantener la actual)</label>
+                <input type="password" class="form-control" id="contrasena" name="contrasena">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">Actualizar</button>
+            <a href="usuarios.php" class="btn btn-danger btn-lg w-100 mt-2">Cancelar</a>
+
         </form>
 
     </div>
-    
 </body>
 </html>
