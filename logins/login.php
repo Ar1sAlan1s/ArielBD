@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['usuario'] = $usuarioData['ID_Usuario'];
         $_SESSION['nombre'] = $usuarioData['Nombre'];
         $_SESSION['rol'] = $usuarioData['Rol'];
+        $_SESSION['contrasena'] = $usuarioData['Contrasena'];
 
         if ($usuarioData['Rol'] == 'Administrador'){
             header("Location: admin.php");
