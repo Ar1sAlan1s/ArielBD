@@ -1,18 +1,19 @@
 <?php
+    session_start();
     require_once '../../includes/db.php';
 
     if (!isset($_SESSION['usuario'])){
         header('Location: ../../logins/login.php');
-        exit;
+        exit();
     }
 
     $rol = $_SESSION['rol'];
 
     if ($rol!= 'Operador'){
-        header('Location: ../../admin/admin.php')
-        exit;
+        header('Location: ../../admin/admin.php');
+        exit();
     }
-    
+
     # Variables
     $nombre = '';
     $RFC = '';
@@ -46,7 +47,7 @@
 
             if ($insertStmt->execute()) {
                 header('Location: ..\ventas\ventas.php?status=success');
-                exit;
+                exit();
             } else {
                 $errores[] = 'Error al registrar el lote. Inténtalo de nuevo.';
             }
@@ -56,16 +57,6 @@
     }
 
     #Se registra el cliente
-
-     # Obtener IDs
-     $query = "SELECT ID_Venta FROM Venta";
-     $result = $conn->query($query);
-     if ($result) {
-         while ($row = $result->fetch_assoc()) {
-             $ventas[] = $row;
-         }
-     }
-    
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +64,7 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Resgistrar Cliente</title>
+        <title>Registrar Cliente</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Leaflet CSS -->
