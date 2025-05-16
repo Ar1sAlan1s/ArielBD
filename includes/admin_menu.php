@@ -71,16 +71,7 @@
           </ul>
         </li>
 
-        <!-- Lotes -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#">Lotes</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/ArielBD/admin/lotes/lotesCre.php">Crear</a></li>
-            <li><a class="dropdown-item" href="/ArielBD/admin/lotes/lotes.php">Listar</a></li>
-            <li><a class="dropdown-item" href="/ArielBD/admin/lotes/lotesAct.php">Editar</a></li>
-            <li><a class="dropdown-item" href="/ArielBD/admin/lotes/lotesDel.php">Eliminar</a></li>
-          </ul>
-        </li>
+        
 
         <!-- Movimiento de Inventario -->
         <li class="nav-item">
@@ -127,3 +118,7 @@
     </div>
   </div>
 </nav>
+
+
+
+
