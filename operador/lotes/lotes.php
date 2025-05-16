@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])){
     $rol = $_SESSION['rol'];
 
     if ($rol!= 'Operador'){
-        header('Location: ../../operador/admin.php')
+        header('Location: ../../operador/admin.php');
         exit;
     }
 

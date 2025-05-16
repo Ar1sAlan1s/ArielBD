@@ -54,7 +54,7 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
     // Volver a mostrar lista actualizada
     $lista = mysqli_query($conn, $queryLista);
 }
-include_once '../../includes/admin_menu.php';
+
 
 ?>
 

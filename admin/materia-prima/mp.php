@@ -18,7 +18,7 @@ if ($search){
 
 }
 $filas = mysqli_query($conn, $query);
-include_once '../../includes/admin_menu.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

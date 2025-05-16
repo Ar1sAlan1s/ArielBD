@@ -1,16 +1,17 @@
 <?php
     session_start();
     require_once '../../includes/db.php';
+  
 
 if (!isset($_SESSION['usuario'])){
         header('Location: ../../logins/login.php');
         exit;
     }
 
-    $rol = $_SESSION['rol'];+
+    $rol = $_SESSION['rol'];
 
     if ($rol!= 'Administrador'){
-        header('Location: ../../operador/cajero.php')
+        header('Location: ../../operador/cajero.php');
         exit;
     }
 

@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
 
     $lista = mysqli_query($conn, $queryLista);
 }
-include_once '../../includes/admin_menu.php';
+
 
 ?>
 

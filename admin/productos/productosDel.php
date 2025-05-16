@@ -9,7 +9,6 @@ if ($rol != 'Administrador') {
 include('../../includes/db.php');
 
 
-include('../../includes/db.php');
 
 $mensaje = ''; 
 
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 
 $subconsulta = "SELECT * FROM `Producto`";
 $filas = mysqli_query($conn, $subconsulta);
-include_once '../../includes/admin_menu.php';
+
 
 ?>
 
