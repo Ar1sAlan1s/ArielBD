@@ -57,7 +57,7 @@
 <body>
     <form method="GET" action="">
         <div class="container text-center">
-            <h2>Mostrar Lote</h2>
+            <h2>Mostrar Ventas</h2>
         </div>
         <div class="container mb-3">
             <div class="input-group mb-3">
