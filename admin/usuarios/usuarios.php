@@ -44,8 +44,12 @@
 
         </div>
 
-            <?php if (isset($_GET['success'])) : ?>
-                <div class="alert alert-success">¡Operación exitosa</div>
+             <?php if ($success) : ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+            
+            <?php if ($error) : ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             
             <div class = "table-responsive">

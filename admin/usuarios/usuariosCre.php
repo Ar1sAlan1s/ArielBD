@@ -7,7 +7,7 @@
         exit;
     }
 
-    $rol = $_SESSION['rol'];+
+    $rol = $_SESSION['rol'];
 
     if ($rol!= 'Administrador'){
         header('Location: ../../operador/cajero.php')
@@ -38,7 +38,8 @@
             $stmt->bind_param("sss", $nombre, $rol, $contrasena1);
             
             if ($stmt->execute()) {
-                header ('Location: usuarios.php?success=1');
+                $_SESSION['success'] = "Usuario creado con exito!";
+                header ('Location: usuarios.php');
                 exit;
             } else {
                 $errores = "Error al ejecutar la consulta en la base de datos: " .$conn->error;
