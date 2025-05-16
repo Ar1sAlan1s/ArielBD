@@ -74,7 +74,7 @@
         );
 
         if ($insertStmt->execute()) {
-            header('Location: lotes.php?status=success');
+            header('Location: ../movimientos/movsAdd.php');
             exit;
         } else {
             $errores[] = 'Error al registrar el lote. Inténtalo de nuevo.';
