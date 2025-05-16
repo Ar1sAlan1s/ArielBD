@@ -26,6 +26,8 @@
 
         </div>
         -->
+        <a href="../../index.php" class="btn btn-danger btn-lg w-100 mt-2">Volver</a>
+
     </div>
 </body>
 </html>
