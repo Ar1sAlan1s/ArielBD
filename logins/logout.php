@@ -2,7 +2,7 @@
     session_start();
 
     if (!isset($_SESSION['usuario'])) { 
-        header('Location: Login.php');
+        header('Location: login.php');
         exit;
     }
 
@@ -10,7 +10,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         session_destroy();
-        header('Location: Login.php');
+        header('Location: login.php');
         exit;
     }
     
@@ -30,7 +30,7 @@
         <h2>¿Estas seguro de cerrar sesión?</h2>
         <form method="POST" class="mt-4">
             <button type="submit" class="btn btn-danger me-2">Sí, estoy seguro.</button>
-            <a href="<?= ($rol === 'Administrador') ? 'admin.php' : 'cajero.php' ?>" class="btn btn-secondary">No, volver.</a>
+            <a href="<?= ($rol === 'Administrador') ? '../admin/admin.php' : '../operador/cajero.php' ?>" class="btn btn-secondary">No, volver.</a>
         </form>
     </div>
 </body>

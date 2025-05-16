@@ -1,16 +1,17 @@
 <?php
     session_start();
     require_once '../../includes/db.php';
+  
 
 if (!isset($_SESSION['usuario'])){
         header('Location: ../../logins/login.php');
         exit;
     }
 
-    $rol = $_SESSION['rol'];+
+    $rol = $_SESSION['rol'];
 
     if ($rol!= 'Administrador'){
-        header('Location: ../../operador/cajero.php')
+        header('Location: ../../operador/cajero.php');
         exit;
     }
 
@@ -53,6 +54,7 @@ if (!isset($_SESSION['usuario'])){
             $stmt->bind_param("sssi", $nombre, $rol, $contrasena, $id);
 
             if ($stmt->execute()) {
+                $_SESSION['success'] = "Usuario editado correctamente. ";
                 header('Location: usuarios.php?success=1');
                 exit;
             } else {
