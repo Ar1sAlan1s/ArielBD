@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>';
   }
 }
-include_once '../../includes/admin_menu.php';
+
 
 ?>
 

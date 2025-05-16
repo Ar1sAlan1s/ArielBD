@@ -7,12 +7,11 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 if ($_SESSION['rol'] !== 'Operador') {
-    header('Location: ../admin/dashboard.php');
+    header('Location: ../admin/admin.php');
     exit;
 }
 
 include('../includes/db.php');
-include('../includes/cajero_menu.php');
 
 // Consultas para mostrar cantidades
 $totalClientes    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Cliente"))['total'];
@@ -30,76 +29,138 @@ $totalMovs        = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS t
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card {
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .action-btn {
+            margin: 2px;
+            font-size: 0.8rem;
+        }
+        .navbar-brand {
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">🧾 Panel del Cajero</h2>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">🧾 Panel del Cajero</span>
+        <div class="d-flex ms-auto">
+            <a href="../logins/logout.php" class="btn btn-outline-light">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </a>
+        </div>
+    </div>
+</nav>
 
+<div class="container mt-4">
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
         <!-- Clientes -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-users"></i> Clientes</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">👥 Clientes</h5>
                     <p class="display-6"><?= $totalClientes ?></p>
-                    <a href="clientes/clientes.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="clientes/clientes.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="clientes/clientesCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Registrar Venta -->
+        <!-- Ventas -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-cash-register"></i> Ventas</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🛒 Registrar Venta</h5>
                     <p class="display-6"><?= $totalVentas ?></p>
-                    <a href="ventas/ventasAdd.php" class="btn btn-success">Registrar</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="ventas/ventas.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Historial
+                        </a>
+                        <a href="ventas/ventasAdd.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Nueva Venta
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Lotes -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0"><i class="fas fa-pallet"></i> Lotes</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">📦 Lotes</h5>
                     <p class="display-6"><?= $totalLotes ?></p>
-                    <a href="../admin/lotes/lotes.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="lotes/lotes.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="lotes/lotesMost.php" class="btn btn-sm btn-warning action-btn">
+                            <i class="fas fa-search"></i> Consultar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Registrar Producción -->
+        <!-- Producción -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-industry"></i> Producción</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🏭 Registrar Producción</h5>
                     <p class="display-6"><?= $totalProduccion ?></p>
-                    <a href="produccion/produccionAdd.php" class="btn btn-success">Registrar</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="produccion/produccion.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Historial
+                        </a>
+                        <a href="produccion/produccionAdd.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Registrar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Movimiento de Inventario -->
+        <!-- Movimientos de Inventario -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-exchange-alt"></i> Movimientos</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🔁 Movimientos</h5>
                     <p class="display-6"><?= $totalMovs ?></p>
-                    <a href="movimientos/movs.php" class="btn btn-primary">Ver</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reportes -->
-        <div class="col">
-            <div class="card text-center shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title">📈 Reportes</h5>
-                    <p class="display-6">📊</p>
-                    <a href="../admin/reportes/reportes.php" class="btn btn-primary">Ver reportes</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="movimientos/movs.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Historial
+                        </a>
+                        <a href="movimientos/movsAdd.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Registrar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

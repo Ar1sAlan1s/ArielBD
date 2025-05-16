@@ -34,7 +34,7 @@ $mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade s
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>';  }
 }
-include_once '../../includes/admin_menu.php';
+
 
 ?>
 

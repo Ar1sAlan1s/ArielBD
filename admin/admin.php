@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 // Validar sesión y rol
 if (!isset($_SESSION['usuario'])) {
     header('Location: ../logins/login.php');
@@ -12,17 +11,14 @@ if ($_SESSION['rol'] !== 'Administrador') {
     header('Location: ../operador/cajero.php');
     exit;
 }
+
 include('../includes/db.php');
-include('../includes/admin_menu.php');
 
 // Consultas para contar registros
 $totalUsuarios     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Usuario"))['total'];
 $totalProveedores  = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Proveedor"))['total'];
 $totalMP           = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM MateriaPrima"))['total'];
-$totalMovs         = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM MovimientoInventario"))['total'];
-$totalProduccion   = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Produccion"))['total'];
-$totalRecetas      = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM ProduccionMateriaPrima"))['total'];
-$totalClientes     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Cliente"))['total'];
+$totalRecetas      = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Receta"))['total'];
 $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM Producto"))['total'];
 ?>
 
@@ -34,21 +30,59 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card {
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .action-btn {
+            margin: 2px;
+            font-size: 0.8rem;
+        }
+        .navbar-brand {
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">🔧 Módulo de Administración</h2>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">🔧 Panel de Administración</span>
+        <div class="d-flex ms-auto">
+            <a href="../logins/logout.php" class="btn btn-outline-light">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </a>
+        </div>
+    </div>
+</nav>
 
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Administración del Sistema</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
 
         <!-- Usuarios -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-users"></i> Usuarios</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">👤 Usuarios</h5>
                     <p class="display-6"><?= $totalUsuarios ?></p>
-                    <a href="usuarios/usuarios.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="usuarios/usuarios.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="usuarios/usuariosCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,10 +90,19 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
         <!-- Proveedores -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-truck"></i> Proveedores</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🚚 Proveedores</h5>
                     <p class="display-6"><?= $totalProveedores ?></p>
-                    <a href="proveedores/proveedores.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="proveedores/proveedores.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="proveedores/proveedoresCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,32 +110,22 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
         <!-- Materias Primas -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-flask"></i> Materias Primas</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🧪 Materias Primas</h5>
                     <p class="display-6"><?= $totalMP ?></p>
-                    <a href="materia-prima/mp.php" class="btn btn-primary">Ver</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Movimiento Inventario -->
-        <div class="col">
-            <div class="card text-center shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title">📦 Inventario</h5>
-                    <p class="display-6"><?= $totalMovs ?></p>
-                    <a href="../operador/movimientos/movs.php" class="btn btn-primary">Ver</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Producción -->
-        <div class="col">
-            <div class="card text-center shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title">🏭 Producción</h5>
-                    <p class="display-6"><?= $totalProduccion ?></p>
-                    <a href="../operador/produccion/produccion.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="materia-prima/mp.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="materia-prima/mpCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                        <a href="materia-prima/mpAct.php" class="btn btn-sm btn-warning action-btn">
+                            <i class="fas fa-edit"></i> Actualizar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,21 +133,19 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
         <!-- Recetas -->
         <div class="col">
             <div class="card text-center shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title">📋 Recetas</h5>
-                    <p class="display-6"><?= $totalRecetas ?></p>
-                    <a href="../operador/produccion/produccion.php" class="btn btn-primary">Ver recetas</a>
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0"><i class="fas fa-book"></i> Recetas</h5>
                 </div>
-            </div>
-        </div>
-
-        <!-- Clientes -->
-        <div class="col">
-            <div class="card text-center shadow h-100">
                 <div class="card-body">
-                    <h5 class="card-title">👥 Clientes</h5>
-                    <p class="display-6"><?= $totalClientes ?></p>
-                    <a href="../operador/clientes/clientes.php" class="btn btn-primary">Ver</a>
+                    <p class="display-6"><?= $totalRecetas ?></p>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="recetas/recetas.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="recetas/recetasCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,10 +153,22 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
         <!-- Productos -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-box-open"></i> Productos</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">🧴 Productos</h5>
                     <p class="display-6"><?= $totalProductos ?></p>
-                    <a href="productos/productos.php" class="btn btn-primary">Ver</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="productos/productos.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="productos/productosCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Crear
+                        </a>
+                        <a href="productos/productosAct.php" class="btn btn-sm btn-warning action-btn">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,10 +176,22 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
         <!-- Reportes -->
         <div class="col">
             <div class="card text-center shadow h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-bar"></i> Reportes</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">📈 Reportes</h5>
                     <p class="display-6">📊</p>
-                    <a href="reportes/reportes.php" class="btn btn-primary">Ver reportes</a>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <a href="reportes/inventario.php" class="btn btn-sm btn-primary action-btn">
+                            <i class="fas fa-boxes"></i> Inventario
+                        </a>
+                        <a href="reportes/ventas.php" class="btn btn-sm btn-info action-btn">
+                            <i class="fas fa-shopping-cart"></i> Ventas
+                        </a>
+                        <a href="reportes/produccion.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-industry"></i> Producción
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

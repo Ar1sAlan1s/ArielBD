@@ -6,14 +6,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $usuario = $_POST['nombreUsuario'];
     $contrasena = $_POST['contrasena'];
 
-    $stmt = $conn->prepare("SELECT * FROM Usuario WHERE Nombre = ?");
-    $stmt->bind_param("s", $usuario);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $usuarioData = $result->fetch_assoc();
+    $stmt = $conn->prepare("SELECT * FROM Usuario WHERE Nombre = ? AND Contrasena = ?");
+    $stmt->bind_param("ss", $usuario, $contrasena);
 
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+        $usuarioData = $result->fetch_assoc();
+    }
+    
 
-    if ($usuarioData && password_verify($contrasena, $usuarioData['Contrasena'])) {
+    if ($usuarioData) {
         $_SESSION['usuario'] = $usuarioData['ID_Usuario'];
         $_SESSION['nombre'] = $usuarioData['Nombre'];
         $_SESSION['rol'] = $usuarioData['Rol'];
