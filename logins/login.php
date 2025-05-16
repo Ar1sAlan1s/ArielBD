@@ -20,9 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['contrasena'] = $usuarioData['Contrasena'];
 
         if ($usuarioData['Rol'] == 'Administrador'){
-            header("Location: admin.php");
+            header("Location: ../admin/admin.php");
         } else{
-            header("Location: cajero.php");
+            header("Location: ../operador/cajero.php");
         }
         exit();
     } else {

@@ -53,6 +53,7 @@ if (!isset($_SESSION['usuario'])){
             $stmt->bind_param("sssi", $nombre, $rol, $contrasena, $id);
 
             if ($stmt->execute()) {
+                $_SESSION['success'] = "Usuario editado correctamente. ";
                 header('Location: usuarios.php?success=1');
                 exit;
             } else {

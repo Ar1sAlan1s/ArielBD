@@ -2,7 +2,7 @@
     session_start();
 
     if (!isset($_SESSION['usuario'])) { 
-        header('Location: Login.php');
+        header('Location: login.php');
         exit;
     }
 
@@ -10,7 +10,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         session_destroy();
-        header('Location: Login.php');
+        header('Location: login.php');
         exit;
     }
     

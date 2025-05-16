@@ -1,5 +1,23 @@
 <?php
+session_start();
     require_once '../../includes/db.php';
+
+
+
+
+if (!isset($_SESSION['usuario'])){
+        header('Location: ../../logins/login.php');
+        exit;
+    }
+
+    $rol = $_SESSION['rol'];
+
+    if ($rol!= 'Operador'){
+        header('Location: ../../operador/admin.php')
+        exit;
+    }
+
+
     #Variables xddd
     $productoID='';
     $tipo='';
@@ -15,7 +33,6 @@
         $fechaEntrada = $_POST['fechaEntrada'];
         $fechaCaducidad = $_POST['fechaCaducidad'];
     }
-   
 
 ?>
 
