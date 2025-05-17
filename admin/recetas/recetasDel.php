@@ -8,15 +8,15 @@ require_once '../../includes/db.php';
         exit;
     }
 
-    $rol = $_SESSION['rol'];+
+    $rol = $_SESSION['rol'];
 
     if ($rol!= 'Administrador'){
-        header('Location: ../../operador/cajero.php')
+        header('Location: ../../operador/cajero.php');
         exit;
     }
 
 
-    if (isset($_GET['id_producto']) && isset($_GET('id_materia'))){
+    if (isset($_GET['id_producto']) && isset($_GET['id_materia'])){
         $id_producto = $_GET['id_producto'];
         $id_materia = $_GET['id_materia'];
 

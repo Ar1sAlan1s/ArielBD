@@ -32,10 +32,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($errores)) {
     $id_producto = $_POST['id_producto'];
     $fecha = $_POST['fecha'];
     $cantidad = $_POST['cantidad'];
+    $fecha_caducidad = $_POST['fecha_caducidad'];
 
-    if (empty($id_producto) || empty($fecha) || empty($cantidad)) {
+    if (empty($id_producto) || empty($fecha) || empty($cantidad) || empty($fecha_caducidad)) {
         $errores[] = "No se puede registrar una producción con campos vacios. ";
     }
+
+     if ($fecha_caducidad <= $fecha) {
+        $errores[] = "La fecha de caducidad debe ser posterior a la fecha de producción.";
+    }
+
 
     $stmt1 = $conn->prepare("SELECT r.*, mp.Nombre as NombreMateriaPrima 
                     FROM Receta r 
@@ -196,10 +202,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($errores)) {
                 }
 
                 // PASO 8: Crear lote del producto producido
-                $insertLoteProducto = $conn->prepare("INSERT INTO Lote 
-                                                    (Tipo, FechaEntrada, FechaCaducidad, Cantidad, ID_Producto) 
-                                                    VALUES ('Producto', ?, NULL, ?, ?)");
-                $insertLoteProducto->bind_param("sdi", $fecha, $cantidad, $id_producto);
+                 $insertLoteProducto = $conn->prepare("INSERT INTO Lote 
+                                            (Tipo, FechaEntrada, FechaCaducidad, Cantidad, ID_Producto) 
+                                            VALUES ('Producto', ?, ?, ?, ?)");
+                $insertLoteProducto->bind_param("ssdi", $fecha, $fecha_caducidad, $cantidad, $id_producto);
                 $insertLoteProducto->execute();
                 $id_lote_producto = $conn->insert_id;
 
@@ -283,6 +289,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($errores)) {
                 <label for="fecha" class="form-label">Fecha de producción</label>
                 <input type="date" class="form-control" id="fecha" name="fecha" required 
                     value="<?= date('Y-m-d') ?>">
+            </div>
+
+            <div class="mb-3 text-start">
+                <label for="fecha_caducidad" class="form-label">Fecha de caducidad</label>
+                <input type="date" class="form-control" id="fecha_caducidad" name="fecha_caducidad" required
+                    min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
             </div>
             
             <div class="mb-3 text-start">
