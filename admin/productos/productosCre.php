@@ -43,6 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="card shadow-lg">
       <div class="card-header bg-primary text-white">
         <h4 class="mb-0">Registrar Producto</h4>
+        <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
       </div>
       <div class="card-body">
         <?php echo $mensaje; ?>

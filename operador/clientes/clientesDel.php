@@ -74,6 +74,9 @@
     <body class="bg-light d-flex justify-content-center align-items-center vh-100">
         <div class="container text-center">
             <h2 class="mb-4">Eliminar Cliente</h2>
+            <a href="../cajero.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+            </a>
             <?php if (!empty($errores)): ?>
             <div class="alert alert-danger">
                 <ul class="mb-0">

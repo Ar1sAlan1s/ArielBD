@@ -59,6 +59,9 @@ $filas = mysqli_query($conn, $subconsulta);
 
 <div class="container mt-5">
   <h3 class="mb-4 text-center">Eliminar Productos</h3>
+  <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
   <?php echo $mensaje; ?>
   <div class="row">
     <?php while ($columnas = mysqli_fetch_assoc($filas)): ?>

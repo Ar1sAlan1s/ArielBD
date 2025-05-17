@@ -70,6 +70,9 @@ $filas = mysqli_query($conn, $query);
 <div class="container py-5">
   <!-- Buscador -->
   <h2 class="text-center mb-4">Buscar Materia Prima</h2>
+  <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
   <form action="#" method="GET" class="row justify-content-center mb-5">
     <div class="col-md-6">
       <input type="text" name="search" class="form-control" placeholder="Buscar por nombre, tipo o descripción...">
@@ -82,14 +85,17 @@ $filas = mysqli_query($conn, $query);
   <!-- Grid de productos -->
   <div class="row g-4">
     <?php while ($columnas = mysqli_fetch_assoc($filas)): ?>
-      <div class="col-md-4 col-sm-6">
-        <div class="card-producto h-100">
-          <h5 class="card-title"><?php echo strtoupper($columnas['Nombre']); ?></h5>
-          <p class="card-text"><strong>Unidad:</strong> <?php echo $columnas['Unidad']; ?></p>
-          <p class="card-date"><strong>Fecha de Caducidad:</strong> <?php echo $columnas['FechaCaducidad']; ?></p>
-        </div>
-      </div>
-    <?php endwhile; ?>
+  <div class="col-md-4 col-sm-6">
+    <div class="card-producto h-100">
+      <h5 class="card-title"><?php echo strtoupper($columnas['Nombre']); ?></h5>
+      <p class="card-text"><strong>ID Materia Prima:</strong> <?php echo $columnas['ID_MateriaPrima']; ?></p>
+      <p class="card-text"><strong>ID Proveedor:</strong> <?php echo $columnas['ID_Proveedor']; ?></p>
+      <p class="card-text"><strong>Unidad:</strong> <?php echo $columnas['Unidad']; ?></p>
+      <p class="card-date"><strong>Fecha de Caducidad:</strong> <?php echo $columnas['FechaCaducidad']; ?></p>
+    </div>
+  </div>
+<?php endwhile; ?>
+
   </div>
 </div>
 

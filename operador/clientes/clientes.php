@@ -60,6 +60,9 @@
     <form method="GET" action="">
         <div class="container text-center">
             <h2>Mostrar Cliente</h2>
+            <a href="../cajero.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+            </a>
         </div>
         <div class="container mb-3">
             <div class="input-group mb-3">
