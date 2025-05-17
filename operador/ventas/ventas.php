@@ -1,58 +1,87 @@
 <?php
-    session_start();
-    require_once '../../includes/db.php';
+session_start();
+require_once '../../includes/db.php';
 
-    if (!isset($_SESSION['usuario'])){
-        header('Location: ../../logins/login.php');
-        exit;
+if (!isset($_SESSION['usuario'])) {
+    header('Location: ../../logins/login.php');
+    exit;
+}
+
+$rol = $_SESSION['rol'];
+
+if ($rol != 'Operador') {
+    header('Location: ../../operador/admin.php');
+    exit;
+}
+
+$resultados = [];
+$detallesVentas = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $filtroIDV = isset($_GET['ID_Venta']) ? $conn->real_escape_string($_GET['ID_Venta']) : '';
+    $filtroIDU = isset($_GET['ID_Usuario']) ? $conn->real_escape_string($_GET['ID_Usuario']) : '';
+    $filtroIDC = isset($_GET['ID_Cliente']) ? $conn->real_escape_string($_GET['ID_Cliente']) : '';
+    $filtroFecha = isset($_GET['fecha']) ? $conn->real_escape_string($_GET['fecha']) : '';
+
+    $query = "SELECT v.*, u.Nombre as NombreUsuario, c.Nombre as NombreCliente 
+              FROM Venta v
+              LEFT JOIN Usuario u ON v.ID_Usuario = u.ID_Usuario
+              LEFT JOIN Cliente c ON v.ID_Cliente = c.ID_Cliente";
+
+    $conditions = [];
+    if (!empty($filtroIDV)) {
+        $conditions[] = "v.ID_Venta LIKE '%$filtroIDV%'";
+    }
+    if (!empty($filtroIDU)) {
+        $conditions[] = "v.ID_Usuario LIKE '%$filtroIDU%'";
+    }
+    if (!empty($filtroIDC)) {
+        $conditions[] = "v.ID_Cliente LIKE '%$filtroIDC%'";
+    }
+    if (!empty($filtroFecha)) {
+        $conditions[] = "v.Fecha = '$filtroFecha'";
     }
 
-    $rol = $_SESSION['rol'];
-
-    if ($rol!= 'Operador'){
-        header('Location: ../../operador/admin.php');
-        exit;
+    if (!empty($conditions)) {
+        $query .= " WHERE " . implode(" AND ", $conditions);
     }
 
-    $resultados = [];
+    $res = $conn->query($query);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $filtroIDV = isset($_GET['ID_Venta']) ? $conn->real_escape_string($_GET['ID_Venta']) : '';
-        $filtroIDU = isset($_GET['ID_Usuario']) ? $conn->real_escape_string($_GET['ID_Usuario']) : '';
-        $filtroIDC = isset($_GET['ID_Cliente']) ? $conn->real_escape_string($_GET['ID_Cliente']) : '';
-        $filtroFecha = isset($_GET['fecha']) ? $conn->real_escape_string($_GET['fecha']) : '';
-
-        $query = "SELECT * FROM Venta";
-
-        if (!empty($filtroIDV)) {
-            $query .= " WHERE ID_Venta LIKE '%$filtroIDV%'";
-        }
-        if (!empty($filtroIDU)) {
-            $query .= " WHERE ID_Usuario LIKE '%$filtroIDU%'";
-        }
-        if (!empty($filtroIDC)) {
-            $query .= " WHERE ID_Cliente LIKE '%$filtroIDC%'";
-        }
-        if (!empty($filtroFecha)) {
-            $query .= " WHERE Fecha = '$filtroFecha'";
-        }
-
-        $res = $conn->query($query);
-
-        if ($res) {
-            while ($fila = $res->fetch_assoc()) {
-                $resultados[] = $fila;
-            }
+    if ($res) {
+        while ($fila = $res->fetch_assoc()) {
+            $resultados[] = $fila;
+            
+            // Obtener detalles de cada venta
+            $id_venta = $fila['ID_Venta'];
+            $query_detalles = "SELECT dv.*, p.Nombre as NombreProducto, l.ID_Lote
+                               FROM DetalleVenta dv
+                               JOIN Producto p ON dv.ID_Producto = p.ID_Producto
+                               JOIN Lote l ON dv.ID_Lote = l.ID_Lote
+                               WHERE dv.ID_Venta = $id_venta";
+            
+            $res_detalles = $conn->query($query_detalles);
+            $detallesVentas[$id_venta] = $res_detalles->fetch_all(MYSQLI_ASSOC);
         }
     }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mostrar Lote</title>
+    <title>Mostrar Ventas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .details-row {
+            background-color: #f8f9fa;
+        }
+        .product-row td {
+            border-top: none !important;
+            padding-left: 50px;
+        }
+    </style>
 </head>
 <body>
     <form method="GET" action="">
@@ -76,7 +105,6 @@
                 <input type="text" class="form-control" name="ID_Cliente" placeholder="Introduzca el ID">
             </div>
 
-
             <button type="submit" class="btn btn-primary">Buscar</button>
         </div>
     </form>
@@ -85,30 +113,90 @@
         <?php if (!empty($resultados)): ?>
             <h4>Resultados encontrados:</h4>
             <table class="table table-bordered mt-2">
-                <thead>
+                <thead class="table-dark">
                     <tr>
-                        <th>ID Lote</th>
-                        <th>ID Usuario</th>
-                        <th>ID Cliente</th>
+                        <th>ID Venta</th>
+                        <th>Usuario</th>
+                        <th>Cliente</th>
                         <th>Fecha</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($resultados as $fila): ?>
+                    <?php foreach ($resultados as $venta): ?>
                         <tr>
-                            <td><?= htmlspecialchars($fila['ID_Venta']) ?></td>
-                            <td><?= htmlspecialchars($fila['ID_Usuario']) ?></td>
-                            <td><?= htmlspecialchars($fila['ID_Cliente']) ?></td>
-                            <td><?= htmlspecialchars($fila['Fecha']) ?></td>
+                            <td><?= htmlspecialchars($venta['ID_Venta']) ?></td>
+                            <td><?= htmlspecialchars($venta['NombreUsuario'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($venta['NombreCliente'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($venta['Fecha']) ?></td>
+                            <td>
+                                <button class="btn btn-sm btn-info toggle-details" 
+                                        data-venta="<?= $venta['ID_Venta'] ?>">
+                                    Ver Detalles
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Fila de detalles (inicialmente oculta) -->
+                        <tr class="details-row" id="details-<?= $venta['ID_Venta'] ?>" style="display: none;">
+                            <td colspan="5">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Lote</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($detallesVentas[$venta['ID_Venta']])): ?>
+                                            <?php foreach ($detallesVentas[$venta['ID_Venta']] as $detalle): ?>
+                                                <tr class="product-row">
+                                                    <td><?= htmlspecialchars($detalle['NombreProducto']) ?></td>
+                                                    <td><?= htmlspecialchars($detalle['ID_Lote']) ?></td>
+                                                    <td><?= htmlspecialchars($detalle['Cantidad']) ?></td>
+                                                    <td>$<?= number_format($detalle['PrecioUnitario'], 2) ?></td>
+                                                    <td>$<?= number_format($detalle['Cantidad'] * $detalle['PrecioUnitario'], 2) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr class="product-row">
+                                                <td colspan="5">No hay productos en esta venta</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         <?php elseif ($_SERVER['REQUEST_METHOD'] === 'GET'): ?>
-            <p>No se encontraron resultados.</p>
+            <p class="alert alert-warning">No se encontraron resultados.</p>
         <?php endif; ?>
 
-        <a href="..\cajero.php" class="btn btn-danger w-100 mt-3">Volver</a>
+        <a href="../cajero.php" class="btn btn-danger w-100 mt-3">Volver</a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mostrar/ocultar detalles al hacer clic en el botón
+        document.querySelectorAll('.toggle-details').forEach(button => {
+            button.addEventListener('click', function() {
+                const ventaId = this.getAttribute('data-venta');
+                const detailsRow = document.getElementById(`details-${ventaId}`);
+                
+                if (detailsRow.style.display === 'none') {
+                    detailsRow.style.display = 'table-row';
+                    this.textContent = 'Ocultar Detalles';
+                } else {
+                    detailsRow.style.display = 'none';
+                    this.textContent = 'Ver Detalles';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

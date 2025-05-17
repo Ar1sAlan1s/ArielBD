@@ -1,5 +1,4 @@
 <?php
-include("includes/db.php");
-
-echo "Conexión exitosa a la base de datos.";
+header('logins/login.php');
+exit;
 ?>
