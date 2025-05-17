@@ -73,6 +73,9 @@ $filas = mysqli_query($conn, $query);
 <div class="container py-5">
   <!-- Buscador -->
   <h2 class="text-center mb-4">Buscar Productos</h2>
+  <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
   <form action="#" method="GET" class="row justify-content-center mb-5">
     <div class="col-md-6">
       <input type="text" name="search" class="form-control" placeholder="Buscar por nombre, tipo o descripción...">

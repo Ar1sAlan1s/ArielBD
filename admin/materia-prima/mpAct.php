@@ -69,6 +69,9 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
 <div class="container mt-4">
 
   <h2 class="text-center mb-4">Lista de Materias Primas</h2>
+  <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
   <?php echo $mensaje; ?>
 
   <table class="table table-bordered table-hover">

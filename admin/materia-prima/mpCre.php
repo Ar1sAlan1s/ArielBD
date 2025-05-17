@@ -52,6 +52,9 @@ $mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade s
     <div class="card shadow-lg">
       <div class="card-header bg-primary text-white">
         <h4 class="mb-0">Registrar Materia Prima</h4>
+        <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
       </div>
       <div class="card-body">
         <?php echo $mensaje; ?>

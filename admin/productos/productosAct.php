@@ -62,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
 <div class="container mt-4">
 
   <h2 class="text-center mb-4">Lista de Productos</h2>
+  <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
   <?php echo $mensaje; ?>
 
   <table class="table table-bordered table-hover">
