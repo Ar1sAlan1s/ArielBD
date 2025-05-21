@@ -26,6 +26,7 @@ require_once '../../includes/db.php';
         $result = $stmt->get_result()->fetch_assoc();
 
         if ($result['total']>0) {
+            $_SESSION['error'] = "No se puede eliminar al usuario debido a que tiene una venta asociada.";
             $errores[] = "No se puede eliminar al usuario debido a que tiene una venta asociada.";
         }
 
@@ -38,7 +39,8 @@ require_once '../../includes/db.php';
     if ($_POST['confirmar'] == 'si') {
         $id = $_POST['id'];
 
-        if ($id = $_SESSION['usuario']){
+        if ($id == $_SESSION['usuario']){
+            $_SESSION['error'] = "No se puede eliminar el usuario activo.";
             $errores[] = "No se puede eliminar al usuario activo. ";
         }
 
@@ -51,7 +53,7 @@ require_once '../../includes/db.php';
             if ($stmt->execute()) {
                 $_SESSION['success'] = "Usuario eliminado correctamente";
             } else {
-                $_SESSION['error'] = "Error al eliminar el proveedor";
+                $_SESSION['error'] = "Error al eliminar el usuario";
             }
         } catch (Exception $e) {
             $_SESSION['error'] = "Error: " . $e->getMessage();
