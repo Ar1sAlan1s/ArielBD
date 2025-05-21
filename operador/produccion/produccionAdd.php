@@ -113,6 +113,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && empty($errores)) {
                 foreach ($lotes_mp as $lote) {
                     if ($lote['FechaCaducidad'] < $fechaActual) {
                         $errores[] = "Lote ID {$lote['ID_Lote']} ({$mp['nombre']}) está caducado (caducó el {$lote['FechaCaducidad']}).";
+
+                        //MovimientoInventario tipo perdida (Asignar cantidad de lote a 0 y movimiento de perdida)
+                        $cantidad_actual = $lote['Cantidad'];
+                        if ($cantidad_actual > 0){
+                            $perdidaMovimiento = $conn->prepare("INSERT INTO MovimientoInventario 
+                                                (TipoMovimiento, Fecha, Cantidad, ID_Lote) 
+                                                VALUES ('Pérdida', ?, ?, ?)");
+                            $perdidaMovimiento->bind_param("sdi", $fechaActual, $cantidad_actual, $lote['ID_Lote']);
+                            $perdidaMovimiento->execute();
+
+                            $updateLote = $conn->prepare("UPDATE Lote SET Cantidad = Cantidad - ? WHERE ID_Lote = ?");
+                            $updateLote->bind_param("di", $cantidad_actual, $lote['ID_Lote']);
+                            $updateLote->execute();
+
+                        } 
+                        
                         continue;
                     }
 
