@@ -14,8 +14,12 @@ $materia = null;
 $queryLista = "SELECT * FROM MateriaPrima";
 $lista = mysqli_query($conn, $queryLista);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buscar_id'])) {
-    $id = (int) $_POST['buscar_id'];
+$query = "SELECT ID_MateriaPrima AS id, Nombre FROM MateriaPrima";
+$result = $conn->query($query);
+
+// Buscar una materia prima seleccionada
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['producto'])) {
+    $id = (int) $_POST['producto'];
     $query = "SELECT * FROM MateriaPrima WHERE ID_MateriaPrima = $id LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $materia = mysqli_fetch_assoc($resultado);
@@ -24,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buscar_id'])) {
     $proveedores = mysqli_query($conn, $queryProveedores);
 }
 
-// 3. Si se envió el formulario de actualización
+// Actualizar la materia prima
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
     $id = (int) $_POST['id'];
     $nombre = $_POST['nombre'];
@@ -38,22 +42,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
                     WHERE ID_MateriaPrima = $id";
 
     if (mysqli_query($conn, $updateQuery)) {
-$mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>¡Éxito!</strong> Se actualizo Correctamente.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>'; 
- } else {
-        
-$mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>¡Error!</strong> No se pudo actualizar.
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>';     }
+        $mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>¡Éxito!</strong> Se actualizó correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>'; 
+    } else {
+        $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>¡Error!</strong> No se pudo actualizar.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';     
+    }
 
-    // Volver a mostrar lista actualizada
+    // Refrescar la lista
     $lista = mysqli_query($conn, $queryLista);
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -67,11 +69,28 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
 <div class="container mt-4">
 
   <h2 class="text-center mb-4">Lista de Materias Primas</h2>
-  <a href="../admin.php" class="btn btn-primary">
-                <i class="bi bi-arrow-left"></i> Volver al menú
-    </a>
+  <a href="../admin.php" class="btn btn-primary mb-3">
+    <i class="bi bi-arrow-left"></i> Volver al menú
+  </a>
   <?php echo $mensaje; ?>
 
+  <!-- Formulario para elegir materia prima -->
+  <form method="POST" class="mb-5">
+    <div class="input-group">
+      <span class="input-group-text">ID a modificar</span>
+      <select class="form-select" id="producto" name="producto" required>
+        <option value="" disabled selected>Seleccione una materia prima</option>
+        <?php foreach ($result as $materiaItem): ?>
+          <option value="<?= $materiaItem['id'] ?>" <?= isset($_POST['producto']) && $_POST['producto'] == $materiaItem['id'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($materiaItem['id']) ?> - <?= htmlspecialchars($materiaItem[ 'Nombre']) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+      <button type="submit" class="btn btn-primary">Editar</button>
+    </div>
+  </form>
+
+  <!-- Tabla de materias primas -->
   <table class="table table-bordered table-hover">
     <thead class="table-dark text-center">
       <tr>
@@ -93,18 +112,9 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
     </tbody>
   </table>
 
-  <!-- Formulario para pedir el ID a modificar -->
-  <form method="POST" class="mb-5">
-    <div class="input-group">
-      <span class="input-group-text">ID a modificar</span>
-      <input type="number" name="buscar_id" class="form-control" required>
-      <button type="submit" class="btn btn-primary">Editar</button>
-    </div>
-  </form>
-
-  <!-- Mostrar formulario si se seleccionó un ID válido -->
+  <!-- Formulario de edición -->
   <?php if ($materia): ?>
-    <div class="card">
+    <div class="card mt-4">
       <div class="card-header bg-warning text-white">
         <h4>Editar Materia Prima ID <?php echo $materia['ID_MateriaPrima']; ?></h4>
       </div>
@@ -116,8 +126,14 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
             <input type="text" name="nombre" class="form-control" value="<?php echo $materia['Nombre']; ?>" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Unidad</label>
-            <input type="text" name="unidad" class="form-control" value="<?php echo $materia['Unidad']; ?>" required>
+            <label for="unidad" class="form-label">Unidad</label>
+            <select type="options" class="form-control" id="unidad" name="unidad" required>
+              <option value="" disabled selected>Seleccione una Unidad</option>
+              <option value="Kg">Kg</option>
+              <option value="g">g</option>
+              <option value="Lts">Lts</option>
+              <option value="mlts">mlts</option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Proveedor</label>
@@ -136,6 +152,7 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
     </div>
   <?php endif; ?>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {

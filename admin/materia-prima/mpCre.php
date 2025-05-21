@@ -65,7 +65,13 @@ $mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade s
           </div>
           <div class="mb-3">
             <label for="unidad" class="form-label">Unidad</label>
-            <input type="text" class="form-control" id="unidad" name="unidad" required />
+            <select type="options" class="form-control" id="unidad" name="unidad" required>
+              <option value="" disabled selected>Seleccione una Unidad</option>
+              <option value="Kg">Kg</option>
+              <option value="g">g</option>
+              <option value="Lts">Lts</option>
+              <option value="mlts">mlts</option>
+            </select>
           </div>
           <div class="mb-3">
            <label for="usuario">Proveedores</label>
