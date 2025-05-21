@@ -51,6 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body class="bg-light d-flex justify-content-center align-items-center vh-100">
     <div class="container text-center">
         <h2 class="mb-4">Nuevo Proveedor</h2>
+        <a href="../admin.php" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Volver al menú
+    </a>
 
         <?php if (!empty($errores)): ?>
             <div class="alert alert-danger">

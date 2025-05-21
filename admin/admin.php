@@ -168,10 +168,14 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
                         <a href="productos/productosAct.php" class="btn btn-sm btn-warning action-btn">
                             <i class="fas fa-edit"></i> Editar
                         </a>
+                        <a href="productos/productosDel.php" class="btn btn-sm btn-danger action-btn">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Reportes -->
         <div class="col">
