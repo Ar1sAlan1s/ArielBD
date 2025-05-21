@@ -38,7 +38,7 @@ require_once '../../includes/db.php';
     if ($_POST['confirmar'] == 'si') {
         $id = $_POST['id'];
 
-        if ($id === $_SESSION['usuario']){
+        if ($id = $_SESSION['usuario']){
             $errores[] = "No se puede eliminar al usuario activo. ";
         }
 
