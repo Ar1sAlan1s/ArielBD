@@ -46,7 +46,7 @@
             );
 
             if ($insertStmt->execute()) {
-                header('Location: ..\ventas\ventas.php?status=success');
+                header('Location: ..\cajero.php?status=success');
                 exit();
             } else {
                 $errores[] = 'Error al registrar el lote. Inténtalo de nuevo.';

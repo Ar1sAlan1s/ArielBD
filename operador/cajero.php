@@ -79,6 +79,9 @@ $totalMovs        = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS t
                         <a href="clientes/clientesCre.php" class="btn btn-sm btn-success action-btn">
                             <i class="fas fa-plus"></i> Crear
                         </a>
+                        <a href="clientes/clientesDel.php" class="btn btn-sm btn-danger action-btn">
+                            <i class="fas fa-minus"></i> Eliminar
+                        </a>
                     </div>
                 </div>
             </div>

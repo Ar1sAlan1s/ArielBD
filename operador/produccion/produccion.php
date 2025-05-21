@@ -6,14 +6,6 @@ if (!isset($_SESSION['usuario'])) {
     header('Location: ../../logins/login.php');
     exit;
 }
-
-$rol = $_SESSION['rol'];
-
-if ($rol != 'Operador') {
-    header('Location: ../../admin/admin.php');
-    exit;
-}
-
 // Manejo de mensajes de sesión
 $mensaje_exito = '';
 $mensaje_error = '';
@@ -90,9 +82,7 @@ function obtenerDetallesProduccion($conn, $id_produccion) {
             <h1 class="mb-0">Historial de Producción</h1>
             
             <a href="../cajero.php" class="btn btn-primary">Volver al menú</a>
-            <a href="produccionAdd.php" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i> Nueva Producción
-            </a>
+            
         </div>
 
         <?php if (!empty($mensaje_exito)): ?>
