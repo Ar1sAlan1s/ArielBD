@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         <button type="submit" class="btn btn-primary me-2">
                             <i class="bi bi-search"></i> Buscar
                         </button>
-                        <a href="lotesmostrar.php" class="btn btn-outline-secondary">
+                        <a href="lotesMost.php" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-counterclockwise"></i> Limpiar
                         </a>
                     </div>
