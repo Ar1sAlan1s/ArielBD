@@ -17,6 +17,7 @@ if ($rol != 'Administrador') {
 
 $success = $_SESSION['success'] ?? null;
 $error = $_SESSION['error'] ?? null;
+
 unset($_SESSION['success'], $_SESSION['error']);
 
 $sql = "SELECT 

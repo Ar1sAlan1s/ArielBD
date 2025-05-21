@@ -27,10 +27,11 @@ if (isset($_GET['id'])) {
 
     if ($result['total'] > 0) {
         $errores[] = "No se puede eliminar al proveedor porque tiene materias primas asociadas.";
+        $_SESSION['error'] = "No se puede eliminar al proveedor porque tiene materias primas asociadas.";
     }
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmar'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmar']) && empty($errores)) {
     if ($_POST['confirmar'] == 'si') {
         $id = $_POST['id'];
         

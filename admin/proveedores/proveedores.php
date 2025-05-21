@@ -14,12 +14,20 @@ if ($rol != 'Administrador'){
     exit;
 }
 
+$success = $_SESSION['success'] ?? null;
+$error = $_SESSION['error'] ?? null;
+$error_db = null; 
+
+// Limpiar mensajes de sesión después de mostrarlos
+unset($_SESSION['success'], $_SESSION['error']);
+
+
 $sql = "SELECT * FROM Proveedor";
 $result = $conn->query($sql);
 if ($result){
     $proveedores = $result->fetch_all(MYSQLI_ASSOC);
 } else {
-    $error = "Error al obtener los proveedores: " . $conn->error;
+    $error_db = "Error al obtener los proveedores: " . $conn->error;
 }
 ?>
 
@@ -33,7 +41,15 @@ if ($result){
 </head>
 <body class="bg-light">
     <div class="container py-5">
-        <?php if (!empty($error)) : ?>
+        <?php if ($error_db) : ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error_db) ?></div>
+        <?php endif; ?>
+        
+        <?php if ($success) : ?>
+            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+        <?php endif; ?>
+        
+        <?php if ($error) : ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         
