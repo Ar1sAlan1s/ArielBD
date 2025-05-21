@@ -182,7 +182,7 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
                 <div class="card-body">
                     <p class="display-6">📊</p>
                     <div class="d-flex flex-wrap justify-content-center">
-                        <a href="reportes/inventario.php" class="btn btn-sm btn-primary action-btn">
+                        <a href="productos/productos.php" class="btn btn-sm btn-primary action-btn">
                             <i class="fas fa-boxes"></i> Inventario
                         </a>
                         <a href="reportes/ventas.php" class="btn btn-sm btn-info action-btn">
