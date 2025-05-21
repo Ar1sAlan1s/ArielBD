@@ -31,11 +31,20 @@ require_once '../../includes/db.php';
 
     }
 
+    
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmar'])) {
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirmar']) && empty($errores)) {
     if ($_POST['confirmar'] == 'si') {
         $id = $_POST['id'];
-        try {
+
+        if ($id === $_SESSION['usuario']){
+            $errores[] = "No se puede eliminar al usuario activo. ";
+        }
+
+
+        if (empty($errores)) {
+            try {
             $stmt = $conn->prepare("DELETE FROM Usuario WHERE ID_Usuario = ?");
             $stmt->bind_param("i", $id);
             
@@ -47,6 +56,8 @@ require_once '../../includes/db.php';
         } catch (Exception $e) {
             $_SESSION['error'] = "Error: " . $e->getMessage();
         }
+        }
+        
     }
     
     header('Location: usuarios.php');
