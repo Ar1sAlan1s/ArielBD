@@ -16,10 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $nombre = $_POST['nombre'];
   $unidad = $_POST['unidad'];
   $id_proveedor = $_POST['id_proveedor'];
-  $caducidad = $_POST['caducidad'];
 
-  $query = "INSERT INTO `MateriaPrima`(`Nombre`,`Unidad`,`ID_Proveedor`,`FechaCaducidad`) VALUES
-  ('$nombre','$unidad','$id_proveedor','$caducidad')";
+  $query = "INSERT INTO `MateriaPrima`(`Nombre`,`Unidad`,`ID_Proveedor`) VALUES
+  ('$nombre','$unidad','$id_proveedor')";
 
 
 
@@ -77,10 +76,6 @@ $mensaje = '<div id="alerta" class="alert alert-success alert-dismissible fade s
                     </option>
                 <?php endwhile; ?>
                 </select>
-          </div>
-          <div class="mb-3">
-            <label for="caducidad" class="form-label">Fecha de Caducidad</label>
-            <input type="date" class="form-control" id="caducidad" name="caducidad" required />
           </div>
           <button type="submit" class="btn btn-success">Registrar</button>
         </form>

@@ -30,13 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
     $nombre = $_POST['nombre'];
     $unidad = $_POST['unidad'];
     $id_proveedor = (int) $_POST['id_proveedor'];
-    $caducidad = $_POST['caducidad'];
 
     $updateQuery = "UPDATE MateriaPrima 
                     SET Nombre = '$nombre',
                         Unidad = '$unidad',
-                        ID_Proveedor = $id_proveedor,
-                        FechaCaducidad = '$caducidad'
+                        ID_Proveedor = $id_proveedor
                     WHERE ID_MateriaPrima = $id";
 
     if (mysqli_query($conn, $updateQuery)) {
@@ -81,7 +79,6 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
         <th>Nombre</th>
         <th>Unidad</th>
         <th>Proveedor</th>
-        <th>Fecha de Caducidad</th>
       </tr>
     </thead>
     <tbody class="text-center">
@@ -91,7 +88,6 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
           <td><?php echo $fila['Nombre']; ?></td>
           <td><?php echo $fila['Unidad']; ?></td>
           <td><?php echo $fila['ID_Proveedor']; ?></td>
-          <td><?php echo $fila['FechaCaducidad']; ?></td>
         </tr>
       <?php endwhile; ?>
     </tbody>
@@ -133,10 +129,6 @@ $mensaje = '<div id="alerta" class="alert alert-danger alert-dismissible fade sh
                 </option>
               <?php endwhile; ?>
             </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Fecha de Caducidad</label>
-            <input type="date" name="caducidad" class="form-control" value="<?php echo $materia['FechaCaducidad']; ?>" required>
           </div>
           <button type="submit" name="actualizar" class="btn btn-success">Guardar Cambios</button>
         </form>

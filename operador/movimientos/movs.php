@@ -16,7 +16,7 @@ $sql = "SELECT mi.*,
         LEFT JOIN Lote l ON mi.ID_Lote = l.ID_Lote
         LEFT JOIN Producto p ON l.ID_Producto = p.ID_Producto
         LEFT JOIN MateriaPrima mp ON l.ID_MateriaPrima = mp.ID_MateriaPrima
-        ORDER BY mi.Fecha DESC, mi.ID_Movimiento DESC";
+        ORDER BY mi.ID_Movimiento DESC";
 
 $movimientos = [];
 if ($result = $conn->query($sql)) {

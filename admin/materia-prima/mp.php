@@ -91,7 +91,6 @@ $filas = mysqli_query($conn, $query);
       <p class="card-text"><strong>ID Materia Prima:</strong> <?php echo $columnas['ID_MateriaPrima']; ?></p>
       <p class="card-text"><strong>ID Proveedor:</strong> <?php echo $columnas['ID_Proveedor']; ?></p>
       <p class="card-text"><strong>Unidad:</strong> <?php echo $columnas['Unidad']; ?></p>
-      <p class="card-date"><strong>Fecha de Caducidad:</strong> <?php echo $columnas['FechaCaducidad']; ?></p>
     </div>
   </div>
 <?php endwhile; ?>
