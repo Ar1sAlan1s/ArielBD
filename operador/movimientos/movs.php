@@ -55,9 +55,6 @@ if ($result = $conn->query($sql)) {
                 <a href="../cajero.php" class="btn btn-primary me-2">
                     <i class="bi bi-arrow-left"></i> Volver al menú
                 </a>
-                <a href="movsAdd.php" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> Nuevo Movimiento
-                </a>
             </div>
         </div>
 

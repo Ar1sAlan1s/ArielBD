@@ -10,7 +10,7 @@
     $rol = $_SESSION['rol'];
 
     if ($rol!= 'Operador'){
-        header('Location: ../../admin/admin.php')
+        header('Location: ../../admin/admin.php');
         exit();
     }      
     
@@ -39,7 +39,7 @@
             $stmtDelete->bind_param("i", $clienteID);
 
             if ($stmtDelete->execute()) {
-                header('Location: enlace.php?status=deleted');
+                header('Location: ../cajero.php?status=deleted');
                 exit;
                 #Se elimina el cliente
             } else {
@@ -103,7 +103,7 @@
 
             
             <button type="submit" class="btn btn-success btn-lg w-100">Eliminar</button>
-            <a href="enlace.php" class="btn btn-danger btn-lg w-100 mt-2">Volver</a>
+            <a href="../cajero.php" class="btn btn-danger btn-lg w-100 mt-2">Volver</a>
         </form>
     </body>
 </html>

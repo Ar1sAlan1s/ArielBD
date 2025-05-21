@@ -186,13 +186,13 @@ $totalProductos    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS 
                 <div class="card-body">
                     <p class="display-6">📊</p>
                     <div class="d-flex flex-wrap justify-content-center">
-                        <a href="reportes/inventario.php" class="btn btn-sm btn-primary action-btn">
+                        <a href="../operador/movimientos/movs.php" class="btn btn-sm btn-primary action-btn">
                             <i class="fas fa-boxes"></i> Inventario
                         </a>
-                        <a href="reportes/ventas.php" class="btn btn-sm btn-info action-btn">
+                        <a href="../operador/ventas/ventas.php" class="btn btn-sm btn-info action-btn">
                             <i class="fas fa-shopping-cart"></i> Ventas
                         </a>
-                        <a href="reportes/produccion.php" class="btn btn-sm btn-success action-btn">
+                        <a href="../operador/produccion/produccion.php" class="btn btn-sm btn-success action-btn">
                             <i class="fas fa-industry"></i> Producción
                         </a>
                     </div>
