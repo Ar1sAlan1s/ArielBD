@@ -11,10 +11,15 @@ include('../../includes/db.php');
 $mensaje = '';
 $materia = null;
 
-$queryLista = "SELECT * FROM MateriaPrima";
+$queryLista = "
+  SELECT m.ID_MateriaPrima, m.Nombre, m.Unidad, p.Nombre AS NombreProveedor
+  FROM MateriaPrima m
+  LEFT JOIN Proveedor p ON m.ID_Proveedor = p.ID_Proveedor
+";
 $lista = mysqli_query($conn, $queryLista);
 
 $query = "SELECT ID_MateriaPrima AS id, Nombre FROM MateriaPrima";
+$prove="SELECT Nombre From Proveedor WHERE Id=Id_Proveedor";
 $result = $conn->query($query);
 
 // Buscar una materia prima seleccionada
@@ -26,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['producto'])) {
 
     $queryProveedores = "SELECT * FROM Proveedor";
     $proveedores = mysqli_query($conn, $queryProveedores);
+    
 }
-
 // Actualizar la materia prima
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
     $id = (int) $_POST['id'];
@@ -106,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar'])) {
           <td><?php echo $fila['ID_MateriaPrima']; ?></td>
           <td><?php echo $fila['Nombre']; ?></td>
           <td><?php echo $fila['Unidad']; ?></td>
-          <td><?php echo $fila['ID_Proveedor']; ?></td>
+          <td><?php echo $fila['NombreProveedor']; ?></td>
         </tr>
       <?php endwhile; ?>
     </tbody>
