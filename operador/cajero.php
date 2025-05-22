@@ -117,11 +117,11 @@ $totalMovs        = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS t
                 <div class="card-body">
                     <p class="display-6"><?= $totalLotes ?></p>
                     <div class="d-flex flex-wrap justify-content-center">
-                        <a href="lotes/lotesCre.php" class="btn btn-sm btn-success action-btn">
-                            <i class="fas fa-plus"></i> Nuevo Lote
-                        </a>
                         <a href="lotes/lotesMost.php" class="btn btn-sm btn-primary action-btn">
                             <i class="fas fa-list"></i> Listar
+                        </a>
+                        <a href="lotes/lotesCre.php" class="btn btn-sm btn-success action-btn">
+                            <i class="fas fa-plus"></i> Nuevo Lote
                         </a>
                     </div>
                 </div>
