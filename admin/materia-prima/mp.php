@@ -11,8 +11,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 if ($search){
     $query = "SELECT * FROM `MateriaPrima` WHERE Nombre LIKE '%$search%' 
-             OR Unidad LIKE '%$search%' 
-             OR FechaCaducidad LIKE '%$search%'";
+             OR Unidad LIKE '%$search%'";
 }else {
    $query = "SELECT * FROM `MateriaPrima`";
 
